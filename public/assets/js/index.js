@@ -12,7 +12,31 @@ const getNotes = () => {
   return $.ajax({
     url: "/api/notes",
     method: "GET",
-  });
+  }).then(function(notesData){
+    console.log(notesData);
+    console.log("------------------");
+
+    //  // Loop through and display each of the notes
+    //  for (var i = 0; i < notesData.length; i++) {
+
+    //   // Get a reference to the note element and populate it with tables
+    //   var tableList = $("#tableList");
+
+    //   // Then display the fields in the HTML (Section Name, Date, URL)
+    //   var listItem = $("<li class='list-group-item mt-4'>");
+
+    //   listItem.append(
+    //     $("<h2>").text("Table #" + (i + 1)),
+    //     $("<hr>"),
+    //     $("<h2>").text("ID: " + tableData[i].customerID),
+    //     $("<h2>").text("Name: " + tableData[i].customerName),
+    //     $("<h2>").text("Email: " + tableData[i].customerEmail),
+    //     $("<h2>").text("Phone: " + tableData[i].phoneNumber)
+    //   );
+
+    //   tableList.append(listItem);
+    // }
+  })
 };
 
 // A function for saving a note to the db
@@ -21,7 +45,12 @@ const saveNote = (note) => {
     url: "/api/notes",
     data: note,
     method: "POST",
-  });
+  }).then(function(){
+    console.log("added new note");
+    $(".note-title").empty();
+    $(".note-textarea").empty();
+    location.reload();
+  })
 };
 
 // A function for deleting a note from the db
@@ -29,7 +58,10 @@ const deleteNote = (id) => {
   return $.ajax({
     url: "api/notes/" + id,
     method: "DELETE",
-  });
+  }).then(function(){
+    console.log("deleted id: "+id);
+    location.reload();
+  })
 };
 
 // If there is an activeNote, display it, otherwise render empty inputs
