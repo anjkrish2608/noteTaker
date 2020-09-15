@@ -1,45 +1,44 @@
 //load data
-var notesData = require("../db/db.json");
+var fs=require("fs");
+var util=require("util");
+const readFileAsync=util.promisify(fs.readFile);
+const writeFileAsync=util.promisify(fs.writeFile);
 
-module.exports = function (app) {// Displays all notes
-    app.get("/api/notes", function (req, res) {
-        return res.json(notesData);
+const read=function(){
+   return readFileAsync("../db/db.json","utf8");
+}
+module.exports = function (app) {
+    // Displays all notes from db.json
+    app.get("/notes", function (req, res) {
+        read().then(function(data){
+            res.json(data);
+        })
     });
 
-    // Displays a single character, or returns false
-    app.get("/api/notes/:id", function (req, res) {
-        var chosen = req.params.id;
 
-        console.log(chosen);
-
-        for (var i = 0; i < db.length; i++) {
-            if (chosen === db[i].routeName) {
-                return res.json(db[i]);
-            }
-        }
-
-        return res.json(false);
-    });
-
-    // Create New notes - takes in JSON input
-    app.post("/api/notes", function (req, res) {
-        // req.body hosts is equal to the JSON post sent from the user
-        // This works because of our body parsing middleware
+    // Create New notes and add to db.json
+    app.post("/notes", function (req, res) {
+        var id=2;
         var newNote = req.body;
-
-        // Using a RegEx Pattern to remove spaces from newCharacter
-        // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-        newNote.routeName = newNote.name.replace(/\s+/g, "").toLowerCase();
-
+        newNote.id=id;
         console.log(newNote);
-
-        characters.push(newNote);
-
-        res.json(newNote);
+        read().then(function(data){
+            var notes=[...data,newNote]
+            writeFileAsync("../db/db.json",JSON.stringify(notes));
+        })
+        id++;
     });
 
     //delete notes route
-    app.delete("/api/notes/:id",function(req,res){
-        console.log(body.params.id);
-    })
+    app.delete("/notes/:id",function(req,res){
+        console.log(req.params.id);
+        read().then(function(notes){
+            notes.forEach(note => {
+                if(note.id==body.params.id){
+                    note=[];
+                }
+            });
+            res.json(data);
+        })
+    });
 };
