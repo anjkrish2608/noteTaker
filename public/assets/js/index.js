@@ -12,30 +12,10 @@ const getNotes = () => {
   return $.ajax({
     url: "/api/notes",
     method: "GET",
-  }).then(function(notesData){
+  }).then(function (notesData) {
     console.log(notesData);
     console.log("------------------");
 
-    //  // Loop through and display each of the notes
-    //  for (var i = 0; i < notesData.length; i++) {
-
-    //   // Get a reference to the note element and populate it with tables
-    //   var tableList = $("#tableList");
-
-    //   // Then display the fields in the HTML (Section Name, Date, URL)
-    //   var listItem = $("<li class='list-group-item mt-4'>");
-
-    //   listItem.append(
-    //     $("<h2>").text("Table #" + (i + 1)),
-    //     $("<hr>"),
-    //     $("<h2>").text("ID: " + tableData[i].customerID),
-    //     $("<h2>").text("Name: " + tableData[i].customerName),
-    //     $("<h2>").text("Email: " + tableData[i].customerEmail),
-    //     $("<h2>").text("Phone: " + tableData[i].phoneNumber)
-    //   );
-
-    //   tableList.append(listItem);
-    // }
   })
 };
 
@@ -45,7 +25,7 @@ const saveNote = (note) => {
     url: "/api/notes",
     data: note,
     method: "POST",
-  }).then(function(){
+  }).then(function () {
     console.log("added new note");
     $(".note-title").empty();
     $(".note-textarea").empty();
@@ -58,8 +38,8 @@ const deleteNote = (id) => {
   return $.ajax({
     url: "api/notes/" + id,
     method: "DELETE",
-  }).then(function(){
-    console.log("deleted id: "+id);
+  }).then(function () {
+    console.log("deleted id: " + id);
     location.reload();
   })
 };
@@ -172,12 +152,34 @@ const getAndRenderNotes = () => {
   return getNotes().then(renderNoteList);
 };
 
-$saveNoteBtn.on("click", handleNoteSave);
-$noteList.on("click", ".list-group-item", handleNoteView);
-$newNoteBtn.on("click", handleNewNoteView);
-$noteList.on("click", ".delete-note", handleNoteDelete);
-$noteTitle.on("keyup", handleRenderSaveBtn);
-$noteText.on("keyup", handleRenderSaveBtn);
+$saveNoteBtn.on("click", function (event) {
+  console.log("save button clicked");
+  handleNoteSave();
+  console.log("saved note");
+}
+);
+$noteList.on("click", ".list-group-item", function (event) {
+  console.log("note list clicked");
+  handleNoteView();
+
+});
+$newNoteBtn.on("click", function (event) {
+  console.log("new note clicked");
+  handleNewNoteView();
+});
+$noteList.on("click", ".delete-note", function (event) {
+  console.log("delete button clicked on list");
+  handleNoteDelete();
+});
+$noteTitle.on("keyup", function (event) {
+  console.log("key up button clicked title");
+  handleRenderSaveBtn();
+}
+);
+$noteText.on("keyup", function (event) {
+  console.log("key up button clicked text");
+  handleRenderSaveBtn();
+});
 
 // Gets and renders the initial list of notes
 getAndRenderNotes();

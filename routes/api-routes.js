@@ -1,6 +1,9 @@
+//load data
+var notesData = require("../db/db.json");
+
 module.exports = function (app) {// Displays all notes
     app.get("/api/notes", function (req, res) {
-        return res.json("db/db.json");
+        return res.json(notesData);
     });
 
     // Displays a single character, or returns false
@@ -37,6 +40,6 @@ module.exports = function (app) {// Displays all notes
 
     //delete notes route
     app.delete("/api/notes/:id",function(req,res){
-        
+        console.log(body.params.id);
     })
 };
